@@ -48,10 +48,10 @@ void Board1_To_2(void)
   data2_Fun[3] |= (uint8_t)(ControlMes.modelFlag & 0x01) << 3;  //比赛/检录模式开关
   data2_Fun[3] |= (uint8_t)(ControlMes.yaw_choose & 0x03) << 5; //大小yaw选择，1是小yaw，2是大yaw
   data2_Fun[3] |= (uint8_t)(cloud_mode & 0x01) << 6;            //云台模式
-  data2_Fun[4] = (uint8_t)big_yaw_enemy_position[0] >> 8 ;              //大YAW坐标系下敌方装甲板X坐标
-  data2_Fun[5] = (uint8_t)big_yaw_enemy_position[0] ;                  //大YAW坐标系下敌方装甲板X坐标
-  data2_Fun[6] = (uint8_t)big_yaw_enemy_position[1] >> 8;              //大YAW坐标系下敌方装甲板Y坐标
-  data2_Fun[7] = (uint8_t)big_yaw_enemy_position[1];                   //大YAW坐标系下敌方装甲板Y坐标
+  data2_Fun[4] = (uint8_t)global_enemy_position[0] >> 8 ;              //地面坐标系下敌方装甲板X坐标
+  data2_Fun[5] = (uint8_t)global_enemy_position[0] ;                  //地面坐标系下敌方装甲板X坐标
+  data2_Fun[6] = (uint8_t)global_enemy_position[1] >> 8;              //地面坐标系下敌方装甲板Y坐标
+  data2_Fun[7] = (uint8_t)global_enemy_position[1];                   //地面坐标系下敌方装甲板Y坐标
   // 数据发送
   Can_Fun.CAN_SendData(CAN_SendHandle, &hcan2, CAN_ID_STD, CAN_ID_GIMBAL, data2_Fun);
 }

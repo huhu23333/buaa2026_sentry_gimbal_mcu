@@ -169,21 +169,30 @@ void Cloud_Little_Yaw_Angle_Set(void)
 	if (ControlMes.AutoAimFlag == 1 && Auto_Aim_Control_Msg.inited )//自瞄模式，上位机已初始化
 	//自瞄模式下
 	{
-		if(chassis_mode == CHASSIS_FOLLOW)
-		{
-			Cloud.Target_Yaw = Electric_Limit_Midpoint;//需要测量中点编码值
+		// 1510大致为yaw中点，故截断为[1510-4096=-2586,1510+4096=5606]
+		int16_t yaw_coder_data_temp = Auto_Aim_Control_Msg.yaw_coder_data;
+		if (yaw_coder_data_temp <= -2586) {
+			yaw_coder_data_temp += 8192;
+		} else if(yaw_coder_data_temp >= 5606) {
+			yaw_coder_data_temp -= 8192;
 		}
-		if(chassis_mode == SPINNING||LACK_BLOOD)
-		{
-			if(cloud_mode == ENEMY_LOCKED)
-			{
-				Cloud.Target_Yaw = (float)Auto_Aim_Control_Msg.yaw_coder_data;//偏移量给算法调参
-			}
-			if(cloud_mode == ENEMY_SEARCH)
-			{
-				Cloud.Target_Yaw = Electric_Limit_Midpoint;
-			}
-		}
+		// yaw_coder_data_temp = 1300;
+		Cloud.Target_Yaw = (float)yaw_coder_data_temp - Big_Yaw_Angle;
+		// if(chassis_mode == CHASSIS_FOLLOW)
+		// {
+		// 	Cloud.Target_Yaw = Electric_Limit_Midpoint;//需要测量中点编码值
+		// }
+		// if(chassis_mode == SPINNING||LACK_BLOOD)
+		// {
+		// 	if(cloud_mode == ENEMY_LOCKED)
+		// 	{
+		// 		Cloud.Target_Yaw = (float)Auto_Aim_Control_Msg.yaw_coder_data;//偏移量给算法调参
+		// 	}
+		// 	if(cloud_mode == ENEMY_SEARCH)
+		// 	{
+		// 		Cloud.Target_Yaw = Electric_Limit_Midpoint;
+		// 	}
+		// }
 	}
 	//非自瞄模式下
 	else
@@ -292,11 +301,11 @@ void Cloud_Sport_Out_Little_Yaw(void) // 先算出M6020s_Yaw.outCurrent，再赋
  */
 void Cloud_Sport_Out(void)
 {
-	if (ControlMes.yaw_choose == Little_Yaw)
-	{
+	//if (ControlMes.yaw_choose == Little_Yaw)
+	//{
 	Cloud_Pitch_Angle_Set();	  // pitch轴控制
 	Cloud_Sport_Out_Little_Yaw(); // 小yaw轴控制
-	}
+	//}
 }
 
 /**
