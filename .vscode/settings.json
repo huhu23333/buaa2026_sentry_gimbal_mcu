@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "task_robotcontrol.h": "c",
+        "dt7.h": "c",
+        "bsp_boardcommunication.h": "c",
+        "shoot.h": "c",
+        "m2006_motor.h": "c",
+        "protocol_uppercomputer.h": "c",
+        "cloud_control.h": "c",
+        "j4310_motor.h": "c",
+        "bsp_can.h": "c",
+        "auto_aim.h": "c",
+        "m6020_motor.h": "c",
+        "dial.h": "c"
+    }
+}
