@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Hero_board1_SJW\Hero_board1_SJW.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Hero_board1_SJW\Hero_board1_SJW.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Jan 01 07:54:04 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Jan 01 09:35:11 2026
 <BR><P>
 <H3>Maximum Stack Usage =        480 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -591,8 +591,8 @@ Global Symbols
 <P><STRONG><a name="[15f]"></a>__aeabi_uldivmod</STRONG> (Thumb, 0 bytes, Stack size 48 bytes, lludivv7m.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = __aeabi_uldivmod
 </UL>
-<BR>[Called By]<UL><LI><a href="#[16c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
-<LI><a href="#[15c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
+<BR>[Called By]<UL><LI><a href="#[15c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
+<LI><a href="#[16c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
 </UL>
 
 <P><STRONG><a name="[221]"></a>_ll_udiv</STRONG> (Thumb, 238 bytes, Stack size 48 bytes, lludivv7m.o(.text), UNUSED)
@@ -830,8 +830,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> cloud_control.o(.data)
 </UL>
-<P><STRONG><a name="[28]"></a>Cloud_Little_Yaw_Angle_Set</STRONG> (Thumb, 534 bytes, Stack size 24 bytes, cloud_control.o(i.Cloud_Little_Yaw_Angle_Set))
-<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = Cloud_Little_Yaw_Angle_Set &rArr; Position_PID_Yaw &rArr; FuzzyComputation &rArr; Membership_Calc
+<P><STRONG><a name="[28]"></a>Cloud_Little_Yaw_Angle_Set</STRONG> (Thumb, 402 bytes, Stack size 16 bytes, cloud_control.o(i.Cloud_Little_Yaw_Angle_Set))
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = Cloud_Little_Yaw_Angle_Set &rArr; Position_PID_Yaw &rArr; FuzzyComputation &rArr; Membership_Calc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;One_Kalman_Filter
 <LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Position_PID_Yaw
@@ -841,7 +841,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> cloud_control.o(.data)
 </UL>
-<P><STRONG><a name="[26]"></a>Cloud_Pitch_Angle_Set</STRONG> (Thumb, 210 bytes, Stack size 16 bytes, cloud_control.o(i.Cloud_Pitch_Angle_Set))
+<P><STRONG><a name="[26]"></a>Cloud_Pitch_Angle_Set</STRONG> (Thumb, 206 bytes, Stack size 16 bytes, cloud_control.o(i.Cloud_Pitch_Angle_Set))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = Cloud_Pitch_Angle_Set
 </UL>
 <BR>[Calls]<UL><LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;One_Kalman_Filter
@@ -851,7 +851,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> cloud_control.o(.data)
 </UL>
 <P><STRONG><a name="[24]"></a>Cloud_Sport_Out</STRONG> (Thumb, 14 bytes, Stack size 8 bytes, cloud_control.o(i.Cloud_Sport_Out))
-<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = Cloud_Sport_Out &rArr; Cloud_Sport_Out_Little_Yaw &rArr; Cloud_Little_Yaw_Angle_Set &rArr; Position_PID_Yaw &rArr; FuzzyComputation &rArr; Membership_Calc
+<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = Cloud_Sport_Out &rArr; Cloud_Sport_Out_Little_Yaw &rArr; Cloud_Little_Yaw_Angle_Set &rArr; Position_PID_Yaw &rArr; FuzzyComputation &rArr; Membership_Calc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[25]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_Sport_Out_Little_Yaw
 <LI><a href="#[26]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_Pitch_Angle_Set
@@ -859,7 +859,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> cloud_control.o(.data)
 </UL>
 <P><STRONG><a name="[25]"></a>Cloud_Sport_Out_Little_Yaw</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, cloud_control.o(i.Cloud_Sport_Out_Little_Yaw))
-<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = Cloud_Sport_Out_Little_Yaw &rArr; Cloud_Little_Yaw_Angle_Set &rArr; Position_PID_Yaw &rArr; FuzzyComputation &rArr; Membership_Calc
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = Cloud_Sport_Out_Little_Yaw &rArr; Cloud_Little_Yaw_Angle_Set &rArr; Position_PID_Yaw &rArr; FuzzyComputation &rArr; Membership_Calc
 </UL>
 <BR>[Calls]<UL><LI><a href="#[28]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Cloud_Little_Yaw_Angle_Set
 </UL>
@@ -2714,7 +2714,7 @@ Global Symbols
 <LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_EPStartXfer
 </UL>
 
-<P><STRONG><a name="[191]"></a>UpperCom_Receive_From_Up</STRONG> (Thumb, 122 bytes, Stack size 16 bytes, protocol_uppercomputer.o(i.UpperCom_Receive_From_Up))
+<P><STRONG><a name="[191]"></a>UpperCom_Receive_From_Up</STRONG> (Thumb, 120 bytes, Stack size 16 bytes, protocol_uppercomputer.o(i.UpperCom_Receive_From_Up))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = UpperCom_Receive_From_Up &rArr; Verify_CRC8_Check_Sum &rArr; Get_CRC8_Check_Sum
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Verify_CRC8_Check_Sum

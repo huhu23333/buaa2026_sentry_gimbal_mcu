@@ -123,8 +123,6 @@ void UpperCom_Receive_From_Up(uint8_t Rec[])
 		memcpy(&global_enemy_position[1], &Rec[12], sizeof(uint16_t));//敌方装甲板在地面坐标系下的Y坐标，单位mm
 		// coordinate_transform(little_yaw_enemy_position , big_yaw_enemy_position , M6020_Array[0].realAngle);
 
-		ControlMes.AutoAimFlag = 1;
-
 		break;
 	default:
 		return;
