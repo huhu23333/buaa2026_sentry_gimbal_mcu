@@ -220,6 +220,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>Cloud.Target_Yaw</ItemText>
         </Ww>
+        <Ww>
+          <count>12</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Big_Yaw_Angle</ItemText>
+        </Ww>
       </WatchWindow1>
       <MemoryWindow1>
         <Mm>

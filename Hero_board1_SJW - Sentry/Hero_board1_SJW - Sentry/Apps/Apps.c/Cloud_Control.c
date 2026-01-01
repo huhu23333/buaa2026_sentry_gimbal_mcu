@@ -11,7 +11,7 @@
 
 #include "Cloud_Control.h"
 
-#define DEBUG_AUTO_AIM_MODE 1 // ControlMes.AutoAimFlag
+// #define DEBUG_AUTO_AIM_MODE 1 // ControlMes.AutoAimFlag
 
 Auto_Aim_Control_t Auto_Aim_Control_Msg;
 
@@ -111,7 +111,7 @@ void Cloud_Pitch_Angle_Set(void)
 {
 	/****************************云台pitchJ4310电机******************************/
 	/******************************遥控器数值传递******************************/
-	if (DEBUG_AUTO_AIM_MODE == 1 && Auto_Aim_Control_Msg.inited )//自瞄模式，上位机已初始化
+	if (ControlMes.AutoAimFlag == 1 && Auto_Aim_Control_Msg.inited )//自瞄模式，上位机已初始化
 	{
 		// 根据J4310_setParameter定义，Cloud.Target_Pitch的浮点值是编码器值(0~65535)线性映射到(-4096~4095)
 		// 换算过程怎么优化留给电控
@@ -168,7 +168,7 @@ void Cloud_Little_Yaw_Angle_Set(void)
 		Cloud.Target_Yaw = M6020s_Yaw.realAngle;
 	}
 
-	if (DEBUG_AUTO_AIM_MODE == 1 && Auto_Aim_Control_Msg.inited )//自瞄模式，上位机已初始化
+	if (ControlMes.AutoAimFlag == 1 && Auto_Aim_Control_Msg.inited )//自瞄模式，上位机已初始化
 	//自瞄模式下
 	{
 		// 1350大致为yaw中点，故截断为[1350-4096=-2746,1350+4096=5446]
@@ -238,7 +238,7 @@ void Cloud_Little_Yaw_Angle_Set(void)
 	}
 
 	static uint8_t time = 5; // 控制周期计时器，用于降低外环PID更新频率
-	if (DEBUG_AUTO_AIM_MODE == 0)
+	if (ControlMes.AutoAimFlag == 0)
 	{
 		if (Delta_Yaw < 10 && Delta_Yaw > -10)
 		{
@@ -253,7 +253,7 @@ void Cloud_Little_Yaw_Angle_Set(void)
 		M6020s_Yaw.outCurrent = One_Kalman_Filter(&Cloud_YawCurrent_Kalman, M6020s_Yaw.outCurrent);
 		time++;
 	}
-	else if (DEBUG_AUTO_AIM_MODE == 1)
+	else if (ControlMes.AutoAimFlag == 1)
 	{
 		if (Delta_Yaw < 10 && Delta_Yaw > -10)
 		{
