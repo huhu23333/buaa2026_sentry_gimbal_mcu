@@ -157,6 +157,13 @@ void TDF_Handle()
                 Shoot_Data.Shoot_Switch = 1;
             }
             /*通道5*/
+            
+            if (RC_Ctrl_TDFData.rc.Ch6 == RD_UP) {
+                ControlMes.manual_fire = 1;
+            } else {
+                ControlMes.manual_fire = 0;
+            }
+
             /*中正常遥控；下自瞄；上键鼠*/
             if (RC_Ctrl_TDFData.rc.Ch5 == RC_MID)
             {

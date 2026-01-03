@@ -46,6 +46,7 @@ typedef struct
   float Target_Yaw;    //
   float Target_Pitch;  //
   float AutoAim_Pitch; //
+  float Little_Yaw_Target;
 } Cloud_t;
 
 typedef struct

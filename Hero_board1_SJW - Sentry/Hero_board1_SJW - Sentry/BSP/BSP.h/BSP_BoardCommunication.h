@@ -64,6 +64,8 @@ typedef struct
 	uint16_t Blood_Volume; // 机器人当前血量
 	uint16_t game_start;   // 比赛开始标志（未开始为1，准备、自检、比赛中为1）
 	uint8_t yaw_choose;     //调试用，大小yaw控制选择
+
+	uint8_t manual_fire;
 } ControlMessge;
 
 /* 图传遥控客户端下发键鼠遥控信息:0x0304  Byte 12*/

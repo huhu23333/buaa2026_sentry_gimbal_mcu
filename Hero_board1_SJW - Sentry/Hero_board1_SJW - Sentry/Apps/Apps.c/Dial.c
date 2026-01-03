@@ -129,7 +129,7 @@ void Normal_Dial(void)
     Heat_Data.cooling_ticks += delta_time;
   }
   /***********************执行拨弹**************************************** */
-  if (!Heat_Data.overheat && !is_reversing && ((!ControlMes.AutoAimFlag) || Auto_Aim_Control_Msg.fire_flag))//没有过热,没有反转,自瞄未开启或自瞄开启时上位机传入开火信号时正常拨弹
+  if (!Heat_Data.overheat && !is_reversing && (((!ControlMes.AutoAimFlag) && ControlMes.manual_fire) || Auto_Aim_Control_Msg.fire_flag))//没有过热,没有反转,自瞄未开启或自瞄开启时上位机传入开火信号时正常拨弹
   {
     M2006_Array[Dial_Motor].targetSpeed = -5000; // Dial_Data.Speed_Dial;
     M2006_Array[Dial_Motor].outCurrent = PID_Model4_Update(&M2006_DialI_Pid, &fuzzy_pid_bullet_v, M2006_Array[Dial_Motor].targetSpeed, M2006_Array[Dial_Motor].realSpeed);

@@ -38,6 +38,9 @@
 #define RC_UP ((uint16_t)3)
 #define RC_MID ((uint16_t)2)
 #define RC_DOWN ((uint16_t)1)
+#define RD_UP ((uint16_t)3)
+#define RD_MID ((uint16_t)2)
+#define RD_DOWN ((uint16_t)1)
 #define KEYMOUSE_AMOUNT 18    // 键盘鼠标总和：18个键。
 #define IT_KEYMOUSE_AMOUNT 18 // 图传键盘鼠标总和：18个键。
 #define TIME_KeyMouse_Press 3 // 超过该时间视为 按下。

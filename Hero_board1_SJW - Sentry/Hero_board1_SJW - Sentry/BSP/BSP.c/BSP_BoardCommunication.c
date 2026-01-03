@@ -39,7 +39,7 @@ void Board1_To_2(void)
   Can_Fun.CAN_SendData(CAN_SendHandle, &hcan2, CAN_ID_STD, CAN_ID_CHASSIS, data);
 
   // 打包数据
-  data2_Fun[0] = (uint8_t)M6020s_Yaw.realAngle >>8;             //小YAW当前角度,单位编码值
+  data2_Fun[0] = (uint8_t)(M6020s_Yaw.realAngle >> 8);             //小YAW当前角度,单位编码值
   data2_Fun[1] = (uint8_t)M6020s_Yaw.realAngle;
   data2_Fun[2] = 0;
   data2_Fun[3] |= (uint8_t)(ControlMes.fric_Flag & 0x01) << 0;  //摩擦轮开关
@@ -71,6 +71,7 @@ void Board1_getGimbalInfo(Can_Export_Data_t RxMessage)
 
 void Board1_getBigYawInfo(Can_Export_Data_t RxMessage)
 {
-  Big_Yaw_Angle = (float32_t)((RxMessage.CANx_Export_RxMessage[0] << 24) | (RxMessage.CANx_Export_RxMessage[1] << 16)|
-                              (RxMessage.CANx_Export_RxMessage[3] << 8)  | (RxMessage.CANx_Export_RxMessage[4] << 0));
+  float negative_Big_Yaw_Angle;
+  memcpy(&negative_Big_Yaw_Angle, RxMessage.CANx_Export_RxMessage, sizeof(float));
+  Big_Yaw_Angle = -negative_Big_Yaw_Angle;
 }
