@@ -44,6 +44,7 @@ typedef struct
   float Yaw_Raw;       //
   float Pitch_Raw;     //
   float Target_Yaw;    //
+  int16_t Target_BigYaw;
   float Target_Pitch;  //
   float AutoAim_Pitch; //
   float Little_Yaw_Target;

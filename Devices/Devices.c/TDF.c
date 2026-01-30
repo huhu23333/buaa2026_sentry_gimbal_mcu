@@ -158,16 +158,45 @@ void TDF_Handle()
             }
             /*通道5*/
             
-            if (RC_Ctrl_TDFData.rc.Ch6 == RD_UP) {
-                ControlMes.manual_fire = 1;
-            } else {
-                ControlMes.manual_fire = 0;
-            }
 
             /*中正常遥控；下自瞄；上键鼠*/
             if (RC_Ctrl_TDFData.rc.Ch5 == RC_MID)
             {
-                /******************************遥控器数值传递******************************/
+                Remote_Control();
+            }
+
+            // 部分自瞄模式(底盘，摩擦轮仍手控)
+            else if (RC_Ctrl_TDFData.rc.Ch5 == RC_DOWN)
+            {
+                Patial_AutoAim();
+            }
+
+            //完全自瞄模式(仅底盘手控)
+            else if (RC_Ctrl_TDFData.rc.Ch5 == RC_UP)
+            {
+                Total_AutoAim();
+            }
+
+            else
+            {
+                ControlMes.AutoAimFlag = 0;
+                ControlMes.x_velocity = 0;          // 左手上下
+                ControlMes.y_velocity = 0;          // 左手左右
+                ControlMes.z_rotation_velocity = 0; // 右手上下
+                ControlMes.yaw_velocity = 0;
+                ControlMes.pitch_velocity = 0;
+                ControlMes.shoot_state = RC_MID;
+            }
+        }
+    }
+		HAL_UARTEx_ReceiveToIdle_DMA(&huart3, SBUS_RXBuffer, sizeof(SBUS_RXBuffer));
+    // 用board1 CAN2发送给board2。
+    Board1_FUN.Board1_To_2();
+}
+
+void Remote_Control()
+{
+/******************************遥控器数值传递******************************/
                 // 底盘运动控制
                 ControlMes.x_velocity = -RC_Ctrl_TDFData.rc.Ch2; // 左手上下
                 ControlMes.y_velocity = -RC_Ctrl_TDFData.rc.Ch4; // 左手左右
@@ -178,9 +207,17 @@ void TDF_Handle()
                 ControlMes.AutoAimFlag = 0;
                 ControlMes.pitch_velocity = RC_Ctrl_TDFData.rc.Ch3;       // 右手上下
                 ControlMes.yaw_velocity = RC_Ctrl_TDFData.rc.Ch1;         // 右手左右
-                ControlMes.z_rotation_velocity = RC_Ctrl_TDFData.rc.Ch13; // 滑轮左右
+                if (RC_Ctrl_TDFData.rc.Ch11 == 1){
+                ControlMes.z_rotation_velocity = RC_Ctrl_TDFData.rc.Ch13; // 左手滑轮
+                }
+                else{ControlMes.z_rotation_velocity = 0;}
                 ControlMes.yaw_position = Auto_Aim_Yaw;
                 // 发射状态设置（右拨杆）（UP 单发模式（顺时针右滚动滚轮拨弹，逆时针左退弹）；MID 禁止发射 ；DOWN 部署模式）
+                if (RC_Ctrl_TDFData.rc.Ch6 == RD_UP) {      //自动拨弹/手动拨弹开关
+                ControlMes.manual_fire = 1;
+                } else {
+                ControlMes.manual_fire = 0;
+                }
 
                 if (ControlMes.shoot_state == RC_UP) // 单发模式
                 {
@@ -229,28 +266,34 @@ void TDF_Handle()
                         Dial_Data.Dial_Switch = Dial_Off;
                     }
                 }
-            }
-
-            // 自瞄模式
-            else if (RC_Ctrl_TDFData.rc.Ch5 == RC_DOWN)
-            {
-                /******************************遥控器数值传递******************************/
+}
+void Patial_AutoAim()
+{
+/******************************遥控器数值传递******************************/
                 // 底盘运动控制
                 ControlMes.x_velocity = -RC_Ctrl_TDFData.rc.Ch2; // 左手上下
                 ControlMes.y_velocity = -RC_Ctrl_TDFData.rc.Ch4; // 左手左右
-
-                ControlMes.yaw_choose =  RC_Ctrl_TDFData.rc.Ch10;           //调试用，大小yaw控制选择，上场需注释掉
+                if (RC_Ctrl_TDFData.rc.Ch11 == 1){
+                ControlMes.z_rotation_velocity = RC_Ctrl_TDFData.rc.Ch13; // 左手滑轮
+                }
+                else{ControlMes.z_rotation_velocity = 0;}
                 
                 // 自瞄云台运动控制（这里添加额外的遥控器控制是为了补偿自瞄精度，自己用遥控器微调一下辅助瞄准）
-                ControlMes.pitch_velocity = RC_Ctrl_TDFData.rc.Ch3 * 0.2; // 右手上下
-                ControlMes.yaw_velocity = RC_Ctrl_TDFData.rc.Ch1;         // 右手左右
-                ControlMes.z_rotation_velocity = RC_Ctrl_TDFData.rc.Ch13; // 滑轮左右
-                ControlMes.AutoAimFlag = 1;
+                // ControlMes.yaw_choose =  RC_Ctrl_TDFData.rc.Ch10;           //调试用，大小yaw控制选择，上场需注释掉
+                // ControlMes.pitch_velocity = RC_Ctrl_TDFData.rc.Ch3 * 0.2; // 右手上下
+                // ControlMes.yaw_velocity = RC_Ctrl_TDFData.rc.Ch1;         // 右手左右
+            
                 // 上位机视觉得到的正负与电机的正负是一样的，通信两边的正负号要对好
+                ControlMes.AutoAimFlag = 1;
                 ControlMes.yaw_position = Auto_Aim_Yaw;
                 Cloud.AutoAim_Pitch = Auto_Aim_Pitch;
 
                 /*************************发射状态设置*********************/
+                if (RC_Ctrl_TDFData.rc.Ch6 == RD_UP) {      //自动拨弹/手动拨弹开关
+                ControlMes.manual_fire = 1;
+                } else {
+                ControlMes.manual_fire = 0;
+                }
                 // （UP 单发模式 ； MID 禁止发射；DOWN 部署模式）
                 if (ControlMes.shoot_state == RC_UP)
                 {
@@ -271,7 +314,7 @@ void TDF_Handle()
                     }
                 }
 
-                else if (ControlMes.shoot_state == RC_MID)
+                else if (ControlMes.shoot_state == RC_MID ||ControlMes.shoot_state == RC_DOWN)
                 {
                     Dial_Data.Dial_Switch = Dial_Off;
                     Dial_Data.Speed_Dial = 0;
@@ -280,47 +323,50 @@ void TDF_Handle()
                     ControlMes.fric_Flag = 0;
                     ControlMes.modelFlag = 0;
                 }
+}
 
-                else if (ControlMes.shoot_state == RC_DOWN) // （步兵连发模式）(英雄部署模式待完善)
+void Total_AutoAim()
+{
+/******************************遥控器数值传递******************************/
+                // 底盘运动控制
+                ControlMes.x_velocity = -RC_Ctrl_TDFData.rc.Ch2; // 左手上下
+                ControlMes.y_velocity = -RC_Ctrl_TDFData.rc.Ch4; // 左手左右
+                if (RC_Ctrl_TDFData.rc.Ch11 == 1){
+                ControlMes.z_rotation_velocity = RC_Ctrl_TDFData.rc.Ch13; // 左手滑轮
+                }
+                else{ControlMes.z_rotation_velocity = 0;}
+                
+                // 自瞄云台运动控制（这里添加额外的遥控器控制是为了补偿自瞄精度，自己用遥控器微调一下辅助瞄准）
+                // ControlMes.yaw_choose =  RC_Ctrl_TDFData.rc.Ch10;           //调试用，大小yaw控制选择，上场需注释掉
+                // ControlMes.pitch_velocity = RC_Ctrl_TDFData.rc.Ch3 * 0.2; // 右手上下
+                // ControlMes.yaw_velocity = RC_Ctrl_TDFData.rc.Ch1;         // 右手左右
+            
+                // 上位机视觉得到的正负与电机的正负是一样的，通信两边的正负号要对好
+                ControlMes.AutoAimFlag = 1;
+                ControlMes.yaw_position = Auto_Aim_Yaw;
+                Cloud.AutoAim_Pitch = Auto_Aim_Pitch;
+
+                /*************************发射状态设置*********************/
+                if (RC_Ctrl_TDFData.rc.Ch6 == RD_UP) {      //自动拨弹/手动拨弹开关
+                ControlMes.manual_fire = 1;
+                } else {
+                ControlMes.manual_fire = 0;
+                }
+
+                if(Auto_Aim_Control_Msg.inited == true &&Auto_Aim_Control_Msg.fire_flag ==true)
                 {
                     Fric_Data.Fric_Switch = Fric_On;
                     ControlMes.fric_Flag = 1;
-                    if (RC_Ctrl_TDFData.rc.Ch8 == RC_UP)
-                    {
-                        Dial_Data.Dial_Switch = Dial_On;
-                    }
-                    else if (RC_Ctrl_TDFData.rc.Ch8 == RC_MID)
-                    {
-                        Dial_Data.Dial_Switch = Dial_Off;
-                    }
-                    else if (RC_Ctrl_TDFData.rc.Ch8 == RC_DOWN)
-                    {
-                        // Dial_Data.Dial_Switch = Dial_Back;
-                        Dial_Data.Dial_Switch = Dial_Off;
-                    }
+                    
                 }
-            }
 
-            else if (RC_Ctrl_TDFData.rc.Ch5 == RC_UP)
-            {
-                /*键鼠数据处理*/
-                // KeyMouseFlag_Update();
-                // RemoteControl_PC_Update();
-            }
-
-            else
-            {
-                ControlMes.AutoAimFlag = 0;
-                ControlMes.x_velocity = 0;          // 左手上下
-                ControlMes.y_velocity = 0;          // 左手左右
-                ControlMes.z_rotation_velocity = 0; // 右手上下
-                ControlMes.yaw_velocity = 0;
-                ControlMes.pitch_velocity = 0;
-                ControlMes.shoot_state = RC_MID;
-            }
-        }
-    }
-		HAL_UARTEx_ReceiveToIdle_DMA(&huart3, SBUS_RXBuffer, sizeof(SBUS_RXBuffer));
-    // 用board1 CAN2发送给board2。
-    Board1_FUN.Board1_To_2();
+                else
+                {
+                    Dial_Data.Dial_Switch = Dial_Off;
+                    Dial_Data.Speed_Dial = 0;
+                    // Dial_Data.Number_ToBeFired = 0;
+                    Fric_Data.Fric_Switch = Fric_Off;
+                    ControlMes.fric_Flag = 0;
+                    ControlMes.modelFlag = 0;
+                }
 }

@@ -180,4 +180,7 @@ extern uint8_t SBUS_RXBuffer[SBUS_RX_LEN];
 
 void TDF_Init(void);
 void TDF_Handle(void);
+void Remote_Control(void);
+void Patial_AutoAim(void);
+void Total_AutoAim(void);
 #endif

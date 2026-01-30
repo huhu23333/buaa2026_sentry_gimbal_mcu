@@ -63,7 +63,7 @@ void UpperCom_Send_To_Up(uint8_t COM)
 		memcpy(&UpperCom_Send_Buffer[15], &ControlMes.z_rotation_velocity, sizeof(int16_t));
 		memcpy(&UpperCom_Send_Buffer[17], &chassis_mode, sizeof(uint8_t));				//底盘模式
 		memcpy(&UpperCom_Send_Buffer[18], &lack_blood_son_mode, sizeof(uint8_t));		//缺血回城子模式
-		memcpy(&UpperCom_Send_Buffer[19], &Big_Yaw_Angle, sizeof(float32_t));		    //大YAW当前角度(世界坐标系下)，单位rad
+		memcpy(&UpperCom_Send_Buffer[19], &Big_Yaw_Angle, sizeof(uint32_t));		    //大YAW当前角度(世界坐标系下)，单位rad
 
 		Append_CRC8_Check_Sum(UpperCom_Send_Buffer, 5 + UpperCom_Send_Buffer[3]); // 5+x，x代表数据包包含的数据字节数。
 	}

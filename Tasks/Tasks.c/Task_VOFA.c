@@ -11,7 +11,7 @@
 
 #include "Task_VOFA.h"
 
-float data;
+float data_1;
 void VOFA_Handle(void const *argument)
 {
     portTickType xLastWakeTime;
@@ -19,9 +19,9 @@ void VOFA_Handle(void const *argument)
     const TickType_t TimeIncrement = pdMS_TO_TICKS(15);
     for (;;)
     {
-        data = J4310s_Pitch.realAngle;
+        data_1 = J4310s_Pitch.realAngle;
 
-        JustFloat_Send(&data, 1, USART1);
+        JustFloat_Send(&data_1, 1, USART1);
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
 }

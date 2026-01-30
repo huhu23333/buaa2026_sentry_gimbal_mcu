@@ -23,10 +23,9 @@ extern M6020s_t *M6020_Array[1];
 /****************Pithch限位*****************/
 const float Delta_Pitch_Min = -11;
 const float Delta_Pitch_Max = 11;
-const float Cloud_Pitch_Min = -11;
+const float Cloud_Pitch_Min = -14;
 const float Cloud_Pitch_Max = 2;
-const float Cloud_Pitch_Center = -4;
-const float Cloud_Pitch_Derta = Cloud_Pitch_Center - Cloud_Pitch_Min;
+const float Cloud_Pitch_Center = -6;	//上电时的初始位置
 /****************Pitch限位End*****************/
 
 float Cloud_Target_Aim_Flag;
@@ -173,11 +172,11 @@ void Cloud_Little_Yaw_Angle_Set(void)
 		if (ControlMes.AutoAimFlag == 1 && Auto_Aim_Control_Msg.inited )//自瞄模式，上位机已初始化
 		//自瞄模式下
 		{
-			// 1350大致为yaw中点，故截断为[1350-4096=-2746,1350+4096=5446]
+			// 1250大致为yaw中点，故截断为[1250-4096=-2846,1250+4096=5346]
 			int16_t yaw_coder_data_temp = Auto_Aim_Control_Msg.yaw_coder_data;
-			if (yaw_coder_data_temp <= -2746) {
+			if (yaw_coder_data_temp <= -2846) {
 				yaw_coder_data_temp += 8192;
-			} else if(yaw_coder_data_temp >= 5446) {
+			} else if(yaw_coder_data_temp >= 5346) {
 				yaw_coder_data_temp -= 8192;
 			}
 			// yaw_coder_data_temp = 1300;
@@ -200,34 +199,47 @@ void Cloud_Little_Yaw_Angle_Set(void)
 		}
 		//非自瞄模式下
 		else
-		{
-			Cloud.Target_Yaw += -1 * ControlMes.yaw_velocity * 0.01f;
+		{	
+			uint16_t target_little_yaw_angle;
+			uint8_t little_yaw_lock;
+			if(ControlMes.yaw_choose == 1)//小YAW模式，实际上是大小YAW均运动的"赛场模式"
+			{
+				Cloud.Target_Yaw += -1 * ControlMes.yaw_velocity * 0.01f;
+				if(ControlMes.yaw_velocity > 10.0f)			//待调参
+				{
+					Cloud.Target_BigYaw = -10;				//待调参
+				}
+				else if(ControlMes.yaw_velocity < -10.0f)	//待调参
+				{
+					Cloud.Target_BigYaw = 10;				//待调参
+				}
+				little_yaw_lock = 0;
+			}
+			else if (ControlMes.yaw_choose == 0)//大YAW
+			{
+				if(little_yaw_lock == 0)
+				{
+					target_little_yaw_angle = M6020s_Yaw.realAngle;
+					little_yaw_lock = 1;
+				}
+				Cloud.Target_Yaw = target_little_yaw_angle;
+			}
+
+			if (Cloud.Target_Yaw > 2500)
+			{
+				Cloud.Target_Yaw = 2500;
+			}
+			else if (Cloud.Target_Yaw < 0)
+			{
+				Cloud.Target_Yaw = 0;
+			}
 		}
 
-		Cloud.Little_Yaw_Target = Cloud.Target_Yaw - Big_Yaw_Angle;
-	}
-
-	while (Cloud.Little_Yaw_Target < -2746)
-	{
-		Cloud.Little_Yaw_Target += 8192;
-	}
-	while (Cloud.Little_Yaw_Target > 5446)
-	{
-		Cloud.Little_Yaw_Target -= 8192;
-	}
-	
-	// yaw轴目标角度限幅在[500,2900]内,500为右限位，2900为左限位
-	if (Cloud.Little_Yaw_Target > 2900)
-	{
-		Cloud.Little_Yaw_Target = 2900;
-	}
-	else if (Cloud.Little_Yaw_Target < 500)
-	{
-		Cloud.Little_Yaw_Target = 500;
+		Cloud.Little_Yaw_Target = Cloud.Target_Yaw;
 	}
 
 	/*******************************************/
-	Angle_Yaw_Cloud = (float)M6020s_Yaw.realAngle;
+	Angle_Yaw_Cloud = (float)M6020s_Yaw.realAngle;//由于机械限位，编码值不超过[8100(上一圈的),2700]
 
 	if (Angle_Yaw_Cloud > 4096) // 大于4096时，从-4096开始自增
 	{
@@ -317,11 +329,8 @@ void Cloud_Sport_Out_Little_Yaw(void) // 先算出M6020s_Yaw.outCurrent，再赋
  */
 void Cloud_Sport_Out(void)
 {
-	//if (ControlMes.yaw_choose == Little_Yaw)
-	//{
 	Cloud_Pitch_Angle_Set();	  // pitch轴控制
 	Cloud_Sport_Out_Little_Yaw(); // 小yaw轴控制
-	//}
 }
 
 /**
