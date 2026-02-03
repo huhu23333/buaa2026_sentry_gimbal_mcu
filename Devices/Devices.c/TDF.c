@@ -123,6 +123,7 @@ void TDF_Handle()
             // 2. 通道数据映射
 			RC_Ctrl_TDFData.rc.Ch1 = map_to_1024(SBUS.Ch1);
             RC_Ctrl_TDFData.rc.Ch2 = map_to_1024(SBUS.Ch2);
+            if(RC_Ctrl_TDFData.rc.Ch2 < 50 && RC_Ctrl_TDFData.rc.Ch2 > -50) RC_Ctrl_TDFData.rc.Ch2 = 0;
             RC_Ctrl_TDFData.rc.Ch3 = map_to_1024(SBUS.Ch3);
             RC_Ctrl_TDFData.rc.Ch4 = map_to_1024(SBUS.Ch4);
             RC_Ctrl_TDFData.rc.Ch5 = map_to_3levels(SBUS.Ch5);

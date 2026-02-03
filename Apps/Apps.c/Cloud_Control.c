@@ -213,6 +213,7 @@ void Cloud_Little_Yaw_Angle_Set(void)
 				{
 					Cloud.Target_BigYaw = 10;				//待调参
 				}
+				else{Cloud.Target_BigYaw = 0;}
 				little_yaw_lock = 0;
 			}
 			else if (ControlMes.yaw_choose == 0)//大YAW

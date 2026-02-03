@@ -43,6 +43,7 @@ void Board1_To_2(void)
     int16_t temp_big_yaw_velocity = -ControlMes.yaw_velocity; 
     data[6] = temp_big_yaw_velocity >> 8;//小YAW模式下，底盘不采用数据。大YAW模式下，为大YAW的目标速度。
     data[7] = temp_big_yaw_velocity;
+		
   }
   // 数据发送
   Can_Fun.CAN_SendData(CAN_SendHandle, &hcan2, CAN_ID_STD, CAN_ID_CHASSIS, data);
