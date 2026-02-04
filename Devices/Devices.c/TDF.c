@@ -212,7 +212,6 @@ void Remote_Control()
                 ControlMes.z_rotation_velocity = RC_Ctrl_TDFData.rc.Ch13; // 左手滑轮
                 }
                 else{ControlMes.z_rotation_velocity = 0;}
-                ControlMes.yaw_position = Auto_Aim_Yaw;
                 // 发射状态设置（右拨杆）（UP 单发模式（顺时针右滚动滚轮拨弹，逆时针左退弹）；MID 禁止发射 ；DOWN 部署模式）
                 if (RC_Ctrl_TDFData.rc.Ch6 == RD_UP) {      //自动拨弹/手动拨弹开关
                 ControlMes.manual_fire = 1;
@@ -286,7 +285,6 @@ void Patial_AutoAim()
             
                 // 上位机视觉得到的正负与电机的正负是一样的，通信两边的正负号要对好
                 ControlMes.AutoAimFlag = 1;
-                ControlMes.yaw_position = Auto_Aim_Yaw;
                 Cloud.AutoAim_Pitch = Auto_Aim_Pitch;
 
                 /*************************发射状态设置*********************/
@@ -344,7 +342,6 @@ void Total_AutoAim()
             
                 // 上位机视觉得到的正负与电机的正负是一样的，通信两边的正负号要对好
                 ControlMes.AutoAimFlag = 1;
-                ControlMes.yaw_position = Auto_Aim_Yaw;
                 Cloud.AutoAim_Pitch = Auto_Aim_Pitch;
 
                 /*************************发射状态设置*********************/

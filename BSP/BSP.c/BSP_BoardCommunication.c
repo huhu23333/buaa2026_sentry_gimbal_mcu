@@ -18,7 +18,6 @@ uint8_t data2_Fun[8] = {0};
 void Board1_To_2(void);
 void Board1_getGimbalInfo(Can_Export_Data_t RxMessage);
 void Board1_getKeycommandInfo(Can_Export_Data_t RxMessage);
-void Board1_getBigYawInfo(Can_Export_Data_t RxMessage);
 
 Board1_FUN_t Board1_FUN = Board1_FunGroundInit;
 
@@ -33,18 +32,11 @@ void Board1_To_2(void)
   data[3] = ControlMes.y_velocity;
   data[4] = ControlMes.z_rotation_velocity >> 8;
   data[5] = ControlMes.z_rotation_velocity;
-  if(ControlMes.yaw_choose == 1)//小YAW
-  {
-    data[6] = Cloud.Target_BigYaw >> 8;
-    data[7] = Cloud.Target_BigYaw;
-  }
-  else if(ControlMes.yaw_choose == 2)//大YAW
-  {
-    int16_t temp_big_yaw_velocity = -ControlMes.yaw_velocity; 
-    data[6] = temp_big_yaw_velocity >> 8;//小YAW模式下，底盘不采用数据。大YAW模式下，为大YAW的目标速度。
-    data[7] = temp_big_yaw_velocity;
+
+  int16_t temp_big_yaw_target = ControlMes.Big_Yaw_Target; 
+  data[6] = temp_big_yaw_target >> 8;//小YAW模式下，底盘不采用数据。大YAW模式下，为大YAW的目标速度。
+  data[7] = temp_big_yaw_target;
 		
-  }
   // 数据发送
   Can_Fun.CAN_SendData(CAN_SendHandle, &hcan2, CAN_ID_STD, CAN_ID_CHASSIS, data);
 
@@ -72,7 +64,7 @@ void Board1_To_2(void)
 
 void Board1_getGimbalInfo(Can_Export_Data_t RxMessage)
 {
-  ControlMes.yaw_realAngle = (int16_t)(RxMessage.CANx_Export_RxMessage[0] << 8 | RxMessage.CANx_Export_RxMessage[1]);//改成大YAW
+  ControlMes.bigYaw_realAngle = (int16_t)(RxMessage.CANx_Export_RxMessage[0] << 8 | RxMessage.CANx_Export_RxMessage[1]);//改成大YAW
   ControlMes.Blood_Volume = (int16_t)(RxMessage.CANx_Export_RxMessage[2] << 8 | RxMessage.CANx_Export_RxMessage[3]);//无用，改成chassis_mode
   ControlMes.Speed_Bullet = (int16_t)(RxMessage.CANx_Export_RxMessage[4] << 8 | RxMessage.CANx_Export_RxMessage[5]);
   ControlMes.Speed_Bullet /= 1000;
@@ -83,9 +75,3 @@ void Board1_getGimbalInfo(Can_Export_Data_t RxMessage)
   
 }
 
-void Board1_getBigYawInfo(Can_Export_Data_t RxMessage)//世界坐标系下的大YAW坐标值
-{
-  uint32_t negative_Big_Yaw_Angle;
-  memcpy(&negative_Big_Yaw_Angle, RxMessage.CANx_Export_RxMessage, sizeof(uint32_t));
-  Big_Yaw_Angle = -negative_Big_Yaw_Angle;
-}

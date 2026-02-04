@@ -82,6 +82,7 @@ void Cloud_Init(void)
 	ControlMes.fric_Flag = 0;
 	ControlMes.redial = 0;
 	ControlMes.manual_fire = 0;
+	ControlMes.Big_Yaw_Target = 0;
 
 	// 自瞄控制信息初始化
 	Auto_Aim_Control_Msg.inited = false;
@@ -89,6 +90,7 @@ void Cloud_Init(void)
 	Auto_Aim_Control_Msg.yaw_coder_data = 0;
 	Auto_Aim_Control_Msg.pitch_coder_data = 0;
 	Auto_Aim_Control_Msg.fire_flag = false;
+
 }
 
 /**
@@ -200,23 +202,14 @@ void Cloud_Little_Yaw_Angle_Set(void)
 		//非自瞄模式下
 		else
 		{	
-			uint16_t target_little_yaw_angle;
-			uint8_t little_yaw_lock;
+			static uint16_t target_little_yaw_angle;
+			static uint8_t little_yaw_lock;
 			if(ControlMes.yaw_choose == 1)//小YAW模式，实际上是大小YAW均运动的"赛场模式"
 			{
 				Cloud.Target_Yaw += -1 * ControlMes.yaw_velocity * 0.01f;
-				if(ControlMes.yaw_velocity > 10.0f)			//待调参
-				{
-					Cloud.Target_BigYaw = -10;				//待调参
-				}
-				else if(ControlMes.yaw_velocity < -10.0f)	//待调参
-				{
-					Cloud.Target_BigYaw = 10;				//待调参
-				}
-				else{Cloud.Target_BigYaw = 0;}
 				little_yaw_lock = 0;
 			}
-			else if (ControlMes.yaw_choose == 0)//大YAW
+			else if (ControlMes.yaw_choose == 2)//大YAW
 			{
 				if(little_yaw_lock == 0)
 				{
@@ -224,6 +217,13 @@ void Cloud_Little_Yaw_Angle_Set(void)
 					little_yaw_lock = 1;
 				}
 				Cloud.Target_Yaw = target_little_yaw_angle;
+
+				ControlMes.Big_Yaw_Target += ((float)ControlMes.yaw_velocity) * 0.02f;
+				if (ControlMes.Big_Yaw_Target > 4095) {
+					ControlMes.Big_Yaw_Target -= 8192;
+				} else if (ControlMes.Big_Yaw_Target < -4096) {
+					ControlMes.Big_Yaw_Target += 8192;
+				}
 			}
 
 			if (Cloud.Target_Yaw > 2500)
@@ -250,7 +250,7 @@ void Cloud_Little_Yaw_Angle_Set(void)
 	{
 		Angle_Yaw_Cloud += 8192;
 	}
-	ControlMes.yaw_realAngle = Angle_Yaw_Cloud;
+	// ControlMes.bigYaw_realAngle = Angle_Yaw_Cloud;
 
 	/********************************************* */
 	Delta_Yaw = Angle_Yaw_Cloud - Cloud.Little_Yaw_Target; // 当前角度-目标角度

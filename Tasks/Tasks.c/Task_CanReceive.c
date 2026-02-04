@@ -68,9 +68,5 @@ void Can2Receives(void const *argument)
     {
       J4310_Fun.J4310_getInfo(Can_Export_Data);
     }
-    else if (ID == CAN_ID_6006_BIG_YAW)
-    {
-      Board1_FUN.Board1_getBigYawInfo(Can_Export_Data);
-    }
   }
 }

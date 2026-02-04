@@ -36,7 +36,6 @@
 	{                          \
 		&Board1_To_2,          \
 		&Board1_getGimbalInfo, \
-		&Board1_getBigYawInfo, \
 	}
 
 // 定义FDCAN报文的结构体
@@ -45,12 +44,16 @@ typedef struct
 	int16_t x_velocity;
 	int16_t y_velocity;
 	int16_t z_rotation_velocity;
+
 	int16_t pitch_velocity;
 	int16_t yaw_velocity;
-	int16_t yaw_position; // 自瞄使用时，yaw轴应该在的绝对位置
+
+	float Big_Yaw_Target;
+
 	uint8_t AutoAimFlag;  // 自瞄开关
 	uint8_t shoot_state;
-	int16_t yaw_realAngle; // 下板传上来的yaw轴角度信息
+	int16_t bigYaw_realAngle; // 下板传上来的yaw轴角度信息
+
 	float Speed_Bullet;	   // 裁判系统传来的弹速
 	int16_t heat_remain;   // 裁判系统传来的剩余热量
 	uint8_t modelFlag;	   // 比赛、检录模式
@@ -92,7 +95,6 @@ typedef struct
 {
 	void (*Board1_To_2)(void);
 	void (*Board1_getGimbalInfo)(Can_Export_Data_t RxMessage);
-	void (*Board1_getBigYawInfo)(Can_Export_Data_t RxMessage);
 } Board1_FUN_t;
 
 extern Board1_FUN_t Board1_FUN;

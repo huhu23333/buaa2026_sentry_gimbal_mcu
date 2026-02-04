@@ -81,7 +81,7 @@ void Gimbal_Chassis_Pitch_Translate(void)
 		chassisIMUData.roll = degreesToRadians(chassisIMUData.roll);
 		chassisIMUData.yaw = degreesToRadians(chassisIMUData.yaw);
 		
-    float gimbalYawAngle = ControlMes.yaw_realAngle / 8192.f * 360.f - Saber_Angle.Yaw - Gimbal_Chassis_offset; // 云台相对于底盘的yaw角度 
+    float gimbalYawAngle = ControlMes.bigYaw_realAngle / 8192.f * 360.f - Saber_Angle.Yaw - Gimbal_Chassis_offset; // 云台相对于底盘的yaw角度 
 		gimbalYawAngle = degreesToRadians(gimbalYawAngle);
   
     // 调用函数计算补偿量  
@@ -192,7 +192,7 @@ void Gimbal_Chassis_Pitch_Translate(void)
 //    float chassisYaw = Saber_Angle.Yaw; // 底盘yaw角度（通常可以忽略，因为我们只关心pitch和roll对云台pitch的影响）  
 //    float chassisPitch = Saber_Angle.Pitch ; // 底盘pitch角度  
 //    float chassisRoll = Saber_Angle.RoLL; // 底盘roll角度  
-//    float gimbalYawAngle = ControlMes.yaw_realAngle /8192.f *360.f - Saber_Angle.Yaw ; // 云台相对于底盘的yaw旋转角度  
+//    float gimbalYawAngle = ControlMes.bigYaw_realAngle /8192.f *360.f - Saber_Angle.Yaw ; // 云台相对于底盘的yaw旋转角度  
 //  
 //    // 创建底盘旋转矩阵  
 //    RotationMatrix chassisRotationMatrix = createRotationMatrixFromEulerAngles(chassisYaw, chassisPitch, chassisRoll);  

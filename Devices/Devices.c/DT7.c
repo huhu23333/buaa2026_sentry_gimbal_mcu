@@ -190,7 +190,6 @@ void DT7_Handle(void)
 			ControlMes.pitch_velocity = RC_CtrlData.rc.ch1;			// 右手上下
 			ControlMes.yaw_velocity = RC_CtrlData.rc.ch0;			// 右手左右
 			ControlMes.z_rotation_velocity = RC_CtrlData.wheel * 2; // 滑轮左右
-			ControlMes.yaw_position = Auto_Aim_Yaw;
 		}
 
 		// 自瞄模式
@@ -209,7 +208,6 @@ void DT7_Handle(void)
 			ControlMes.yaw_velocity = RC_CtrlData.rc.ch0;		  // 右手左右
 			ControlMes.AutoAimFlag = 1;
 			// 上位机视觉得到的正负与电机的正负是一样的，通信两边的正负号要对好
-			ControlMes.yaw_position = Auto_Aim_Yaw;
 			Cloud.AutoAim_Pitch = Auto_Aim_Pitch;
 			if (ControlMes.shoot_state == RC_SW_DOWN)
 			{
@@ -430,7 +428,6 @@ void RemoteControl_PC_Update(void)
 		{
 			ControlMes.AutoAimFlag = 1;
 			// 上位机视觉得到的正负与电机的正负是一样的，通信两边的正负号要对好
-			ControlMes.yaw_position = Auto_Aim_Yaw;
 			Cloud.AutoAim_Pitch = Auto_Aim_Pitch;
 		}
 		else if (ControlMes.AutoAimFlag == 1)
@@ -441,7 +438,6 @@ void RemoteControl_PC_Update(void)
 
 	if (ControlMes.AutoAimFlag == 1)
 	{
-		ControlMes.yaw_position = Auto_Aim_Yaw;
 		Cloud.AutoAim_Pitch = Auto_Aim_Pitch;
 	}
 
