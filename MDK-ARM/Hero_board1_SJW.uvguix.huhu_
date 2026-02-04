@@ -93,8 +93,8 @@
       <flags>2</flags>
       <showCmd>3</showCmd>
       <MinPosition>
-        <xPos>-1</xPos>
-        <yPos>-1</yPos>
+        <xPos>-32000</xPos>
+        <yPos>-32000</yPos>
       </MinPosition>
       <MaxPosition>
         <xPos>-1</xPos>
@@ -3626,14 +3626,14 @@
         <Name>..\Protocol\Protocol.c\Protocol_UpperComputer.c</Name>
         <ColumnNumber>66</ColumnNumber>
         <TopLine>35</TopLine>
-        <CurrentLine>65</CurrentLine>
+        <CurrentLine>66</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>
       </Doc>
       <Doc>
         <Name>..\Apps\Apps.c\Cloud_Control.c</Name>
-        <ColumnNumber>8</ColumnNumber>
+        <ColumnNumber>17</ColumnNumber>
         <TopLine>189</TopLine>
         <CurrentLine>231</CurrentLine>
         <Folding>1</Folding>

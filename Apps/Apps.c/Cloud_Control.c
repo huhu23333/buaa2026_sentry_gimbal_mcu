@@ -72,8 +72,7 @@ void Cloud_Init(void)
 	Cloud.Target_Pitch = Cloud_Pitch_Center;
 	Cloud.Pitch_Raw = J4310s_Pitch.outPosition;
 	Cloud.AutoAim_Pitch = 0;
-	Cloud.Target_Yaw = M6020s_Yaw.realAngle;
-	Cloud.Little_Yaw_Target = 1350;
+	Cloud.Little_Yaw_Target = M6020s_Yaw.realAngle;
 
 	One_Kalman_Create(&Cloud_YawCurrent_Kalman, 1, 6);
 	One_Kalman_Create(&Cloud_PitchCurrent_Kalman, 6, 10);
@@ -87,7 +86,7 @@ void Cloud_Init(void)
 	// 自瞄控制信息初始化
 	Auto_Aim_Control_Msg.inited = false;
 	Auto_Aim_Control_Msg.reset = true;
-	Auto_Aim_Control_Msg.yaw_coder_data = 0;
+	Auto_Aim_Control_Msg.small_yaw_coder_data = 0;
 	Auto_Aim_Control_Msg.pitch_coder_data = 0;
 	Auto_Aim_Control_Msg.fire_flag = false;
 
@@ -174,28 +173,35 @@ void Cloud_Little_Yaw_Angle_Set(void)
 		if (ControlMes.AutoAimFlag == 1 && Auto_Aim_Control_Msg.inited )//自瞄模式，上位机已初始化
 		//自瞄模式下
 		{
-			// 1250大致为yaw中点，故截断为[1250-4096=-2846,1250+4096=5346]
-			int16_t yaw_coder_data_temp = Auto_Aim_Control_Msg.yaw_coder_data;
-			if (yaw_coder_data_temp <= -2846) {
-				yaw_coder_data_temp += 8192;
-			} else if(yaw_coder_data_temp >= 5346) {
-				yaw_coder_data_temp -= 8192;
+			ControlMes.Big_Yaw_Target = Auto_Aim_Control_Msg.big_yaw_coder_data;
+			if (ControlMes.Big_Yaw_Target > 4095) {
+				ControlMes.Big_Yaw_Target -= 8192;
+			} else if (ControlMes.Big_Yaw_Target < -4096) {
+				ControlMes.Big_Yaw_Target += 8192;
 			}
-			// yaw_coder_data_temp = 1300;
-			Cloud.Target_Yaw = (float)yaw_coder_data_temp;
+
+			// 1250大致为yaw中点，故截断为[1250-4096=-2846,1250+4096=5346]
+			int16_t small_yaw_coder_data_temp = Auto_Aim_Control_Msg.small_yaw_coder_data;
+			if (small_yaw_coder_data_temp <= -2846) {
+				small_yaw_coder_data_temp += 8192;
+			} else if(small_yaw_coder_data_temp >= 5346) {
+				small_yaw_coder_data_temp -= 8192;
+			}
+			// small_yaw_coder_data_temp = 1300;
+			Cloud.Little_Yaw_Target = (float)small_yaw_coder_data_temp;
 			// if(chassis_mode == CHASSIS_FOLLOW)
 			// {
-			// 	Cloud.Target_Yaw = Electric_Limit_Midpoint;//需要测量中点编码值
+			// 	Cloud.Little_Yaw_Target = Electric_Limit_Midpoint;//需要测量中点编码值
 			// }
 			// if(chassis_mode == SPINNING||LACK_BLOOD)
 			// {
 			// 	if(cloud_mode == ENEMY_LOCKED)
 			// 	{
-			// 		Cloud.Target_Yaw = (float)Auto_Aim_Control_Msg.yaw_coder_data;//偏移量给算法调参
+			// 		Cloud.Little_Yaw_Target = (float)Auto_Aim_Control_Msg.small_yaw_coder_data;//偏移量给算法调参
 			// 	}
 			// 	if(cloud_mode == ENEMY_SEARCH)
 			// 	{
-			// 		Cloud.Target_Yaw = Electric_Limit_Midpoint;
+			// 		Cloud.Little_Yaw_Target = Electric_Limit_Midpoint;
 			// 	}
 			// }
 		}
@@ -206,7 +212,7 @@ void Cloud_Little_Yaw_Angle_Set(void)
 			static uint8_t little_yaw_lock;
 			if(ControlMes.yaw_choose == 1)//小YAW模式，实际上是大小YAW均运动的"赛场模式"
 			{
-				Cloud.Target_Yaw += -1 * ControlMes.yaw_velocity * 0.01f;
+				Cloud.Little_Yaw_Target += -1 * ControlMes.yaw_velocity * 0.01f;
 				little_yaw_lock = 0;
 			}
 			else if (ControlMes.yaw_choose == 2)//大YAW
@@ -216,7 +222,7 @@ void Cloud_Little_Yaw_Angle_Set(void)
 					target_little_yaw_angle = M6020s_Yaw.realAngle;
 					little_yaw_lock = 1;
 				}
-				Cloud.Target_Yaw = target_little_yaw_angle;
+				Cloud.Little_Yaw_Target = target_little_yaw_angle;
 
 				ControlMes.Big_Yaw_Target += ((float)ControlMes.yaw_velocity) * 0.02f;
 				if (ControlMes.Big_Yaw_Target > 4095) {
@@ -226,17 +232,16 @@ void Cloud_Little_Yaw_Angle_Set(void)
 				}
 			}
 
-			if (Cloud.Target_Yaw > 2500)
+			if (Cloud.Little_Yaw_Target > 2500)
 			{
-				Cloud.Target_Yaw = 2500;
+				Cloud.Little_Yaw_Target = 2500;
 			}
-			else if (Cloud.Target_Yaw < 0)
+			else if (Cloud.Little_Yaw_Target < 0)
 			{
-				Cloud.Target_Yaw = 0;
+				Cloud.Little_Yaw_Target = 0;
 			}
 		}
 
-		Cloud.Little_Yaw_Target = Cloud.Target_Yaw;
 	}
 
 	/*******************************************/

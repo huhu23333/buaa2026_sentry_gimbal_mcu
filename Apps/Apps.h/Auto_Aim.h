@@ -7,7 +7,8 @@ typedef struct
   bool inited;
   bool reset;
   uint16_t pitch_coder_data; // 与电机编码器值对应(0~65535)
-  uint16_t yaw_coder_data; // 与电机编码器值对应(0~8191)
+  uint16_t small_yaw_coder_data; // 与电机编码器值对应(0~8191)
+  uint16_t big_yaw_coder_data; // 与电机编码器值对应(0~8191)
   bool fire_flag;
 } Auto_Aim_Control_t;
 

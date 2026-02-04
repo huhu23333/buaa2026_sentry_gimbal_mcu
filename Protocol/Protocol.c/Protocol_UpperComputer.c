@@ -19,8 +19,7 @@ float Auto_Aim_Pitch;
 bool Fire_Flag = 0;
 positionpid_t Auto_Aim_PID;
 extern M6020s_t *M6020_Array;
-uint16_t global_enemy_position[2];//敌方装甲板在小YAW坐标系下的X,Y坐标，单位mm
-//uint16_t big_yaw_enemy_position[2];//敌方装甲板在小YAW坐标系下的X,Y坐标，单位mm
+uint16_t big_yaw_enemy_position[2];//敌方装甲板在大yaw坐标系下的X,Y坐标，单位mm
 uint8_t chassis_mode = 0;//底盘跟随/小陀螺/缺血回城模式	//由下板传输
 uint8_t cloud_mode = 0;//自瞄锁敌/扫描索敌模式
 bool lack_blood_son_mode = 0;//缺血回城模式下的子模式	//由下板传输
@@ -116,11 +115,13 @@ void UpperCom_Receive_From_Up(uint8_t Rec[])
 		Auto_Aim_Control_Msg.reset = Rec[4];//云台模式
 		cloud_mode = Auto_Aim_Control_Msg.reset;
 		memcpy(&Auto_Aim_Control_Msg.pitch_coder_data, &Rec[5], sizeof(uint16_t));//pitch目标角度
-		memcpy(&Auto_Aim_Control_Msg.yaw_coder_data, &Rec[7], sizeof(uint16_t));//yaw目标角度
+		memcpy(&Auto_Aim_Control_Msg.small_yaw_coder_data, &Rec[7], sizeof(uint16_t));//yaw目标角度
 		Auto_Aim_Control_Msg.fire_flag = Rec[9];//开火开关
-		memcpy(&global_enemy_position[0], &Rec[10], sizeof(uint16_t));//敌方装甲板在地面坐标系下的X坐标，单位mm
-		memcpy(&global_enemy_position[1], &Rec[12], sizeof(uint16_t));//敌方装甲板在地面坐标系下的Y坐标，单位mm
+		memcpy(&big_yaw_enemy_position[0], &Rec[10], sizeof(uint16_t));//敌方装甲板在大yaw坐标系下的X坐标，单位mm
+		memcpy(&big_yaw_enemy_position[1], &Rec[12], sizeof(uint16_t));//敌方装甲板在大yaw坐标系下的Y坐标，单位mm
 		// coordinate_transform(little_yaw_enemy_position , big_yaw_enemy_position , M6020_Array[0].realAngle);
+		memcpy(&Auto_Aim_Control_Msg.big_yaw_coder_data, &Rec[14], sizeof(uint16_t));
+		
 
 		break;
 	default:
