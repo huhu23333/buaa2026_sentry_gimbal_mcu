@@ -180,11 +180,11 @@ void Cloud_Little_Yaw_Angle_Set(void)
 				ControlMes.Big_Yaw_Target += 8192;
 			}
 
-			// 1250大致为yaw中点，故截断为[1250-4096=-2846,1250+4096=5346]
+			// 1350大致为yaw中点，故截断为[1350-4096=-2746,1350+4096=5446]
 			int16_t small_yaw_coder_data_temp = Auto_Aim_Control_Msg.small_yaw_coder_data;
-			if (small_yaw_coder_data_temp <= -2846) {
+			if (small_yaw_coder_data_temp <= -2746) {
 				small_yaw_coder_data_temp += 8192;
-			} else if(small_yaw_coder_data_temp >= 5346) {
+			} else if(small_yaw_coder_data_temp >= 5446) {
 				small_yaw_coder_data_temp -= 8192;
 			}
 			// small_yaw_coder_data_temp = 1300;

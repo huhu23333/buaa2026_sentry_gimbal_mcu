@@ -54,10 +54,8 @@ void Board1_To_2(void)
   data2_Fun[3] = temp;
   temp = 0;
 
-  data2_Fun[4] = (uint8_t)big_yaw_enemy_position[0] >> 8 ;             //大yaw坐标系下敌方装甲板X坐标
-  data2_Fun[5] = (uint8_t)big_yaw_enemy_position[0] ;                  //大yaw坐标系下敌方装甲板X坐标
-  data2_Fun[6] = (uint8_t)big_yaw_enemy_position[1] >> 8;              //大yaw坐标系下敌方装甲板Y坐标
-  data2_Fun[7] = (uint8_t)big_yaw_enemy_position[1];                   //大yaw坐标系下敌方装甲板Y坐标
+  memcpy(&data2_Fun[4], &big_yaw_enemy_position[0], sizeof(int16_t)); //大yaw坐标系下敌方装甲板X坐标
+  memcpy(&data2_Fun[6], &big_yaw_enemy_position[1], sizeof(int16_t)); //大yaw坐标系下敌方装甲板Y坐标
   // 数据发送
   Can_Fun.CAN_SendData(CAN_SendHandle, &hcan2, CAN_ID_STD, CAN_ID_GIMBAL, data2_Fun);
 }
