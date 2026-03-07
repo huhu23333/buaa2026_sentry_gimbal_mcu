@@ -77,12 +77,12 @@ void Fric_Judge_ReadyOrNot()
 void Fric_Set_targetSpeed(void)
 {
 
-  if (ControlMes.fric_Flag == 0 || Heat_Data.overheat)
+  if (ControlMes.fric_Flag == 0) // || Heat_Data.overheat)
   {
     Fric_Data.Required_Speed = 0;
     return;
   }
-  else if (ControlMes.fric_Flag == 1 && !Heat_Data.overheat)
+  else if (ControlMes.fric_Flag == 1) // && !Heat_Data.overheat)
   {
     Fric_Data.Required_Speed = Fric_SpeedLevel1;
   }
