@@ -364,6 +364,7 @@ void Total_AutoAim()
 
                 if(Auto_Aim_Control_Msg.inited == true && Auto_Aim_Control_Msg.reset == false)
                 {
+                    Dial_Data.Dial_Switch = Dial_On;
                     Fric_Data.Fric_Switch = Fric_On;
                     ControlMes.fric_Flag = 1;
                     
