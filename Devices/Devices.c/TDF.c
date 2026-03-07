@@ -351,7 +351,7 @@ void Total_AutoAim()
                 ControlMes.manual_fire = 0;
                 }
 
-                if(Auto_Aim_Control_Msg.inited == true &&Auto_Aim_Control_Msg.fire_flag ==true)
+                if(Auto_Aim_Control_Msg.inited == true && Auto_Aim_Control_Msg.reset == false)
                 {
                     Fric_Data.Fric_Switch = Fric_On;
                     ControlMes.fric_Flag = 1;
