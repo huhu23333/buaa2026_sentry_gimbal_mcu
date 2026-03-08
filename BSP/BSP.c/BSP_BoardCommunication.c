@@ -14,10 +14,13 @@ ControlMessge ControlMes;
 ext_robot_keycommand_t ext_robot_keycommand;
 uint8_t data[8] = {0};
 uint8_t data2_Fun[8] = {0};
+uint8_t die_info[2] = {0};
+uint8_t blood_recover_info[2] = {0};
 
 void Board1_To_2(void);
 void Board1_getGimbalInfo(Can_Export_Data_t RxMessage);
 void Board1_getKeycommandInfo(Can_Export_Data_t RxMessage);
+void Board1_getJudgeSystemInfo(Can_Export_Data_t RxMessage);
 
 Board1_FUN_t Board1_FUN = Board1_FunGroundInit;
 
@@ -70,6 +73,15 @@ void Board1_getGimbalInfo(Can_Export_Data_t RxMessage)
   ControlMes.game_start = (uint8_t)(RxMessage.CANx_Export_RxMessage[6] >> 1) & 0x01;
   chassis_mode = (uint8_t)(RxMessage.CANx_Export_RxMessage[6] >> 4) & 0x03;
   lack_blood_son_mode = (uint8_t)(RxMessage.CANx_Export_RxMessage[6] >> 5) & 0x01;
+  
+}
+
+void Board1_getJudgeSystemInfo(Can_Export_Data_t RxMessage)
+{
+  die_info[0] = (uint8_t)(RxMessage.CANx_Export_RxMessage[0]);
+  die_info[1] = (uint8_t)(RxMessage.CANx_Export_RxMessage[1]);
+  blood_recover_info[0] = (uint8_t)(RxMessage.CANx_Export_RxMessage[2]);
+  blood_recover_info[1] = (uint8_t)(RxMessage.CANx_Export_RxMessage[3]);
   
 }
 

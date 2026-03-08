@@ -3,9 +3,9 @@
 .\hero_board1_sjw\user_lib.o: ../Apps/Apps.h/struct_typedef.h
 .\hero_board1_sjw\user_lib.o: ../Alg/Alg.h/arm_math.h
 .\hero_board1_sjw\user_lib.o: ../Drivers/CMSIS/Include/core_cm4.h
-.\hero_board1_sjw\user_lib.o: G:\Software2\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stdint.h
+.\hero_board1_sjw\user_lib.o: E:\ProgramFile\MDK\core\ARM\ARMCC\Bin\..\include\stdint.h
 .\hero_board1_sjw\user_lib.o: ../Drivers/CMSIS/Include/cmsis_version.h
 .\hero_board1_sjw\user_lib.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 .\hero_board1_sjw\user_lib.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
-.\hero_board1_sjw\user_lib.o: G:\Software2\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\string.h
-.\hero_board1_sjw\user_lib.o: G:\Software2\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\math.h
+.\hero_board1_sjw\user_lib.o: E:\ProgramFile\MDK\core\ARM\ARMCC\Bin\..\include\string.h
+.\hero_board1_sjw\user_lib.o: E:\ProgramFile\MDK\core\ARM\ARMCC\Bin\..\include\math.h

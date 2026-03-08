@@ -1,8 +1,8 @@
 .\hero_board1_sjw\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c
-.\hero_board1_sjw\stream_buffer.o: G:\Software2\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stdint.h
-.\hero_board1_sjw\stream_buffer.o: G:\Software2\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\string.h
+.\hero_board1_sjw\stream_buffer.o: E:\ProgramFile\MDK\core\ARM\ARMCC\Bin\..\include\stdint.h
+.\hero_board1_sjw\stream_buffer.o: E:\ProgramFile\MDK\core\ARM\ARMCC\Bin\..\include\string.h
 .\hero_board1_sjw\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-.\hero_board1_sjw\stream_buffer.o: G:\Software2\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stddef.h
+.\hero_board1_sjw\stream_buffer.o: E:\ProgramFile\MDK\core\ARM\ARMCC\Bin\..\include\stddef.h
 .\hero_board1_sjw\stream_buffer.o: ../Core/Inc/FreeRTOSConfig.h
 .\hero_board1_sjw\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 .\hero_board1_sjw\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

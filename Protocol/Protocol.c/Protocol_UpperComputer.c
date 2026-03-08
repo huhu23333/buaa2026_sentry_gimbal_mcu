@@ -52,7 +52,7 @@ void UpperCom_Send_To_Up(uint8_t COM)
 	if (COM == 0xCD)
 	{
 		if (mark++ >= 200) mark = 0;
-		UpperCom_Send_Buffer[3] = 23; // 数据包包含的字节数
+		UpperCom_Send_Buffer[3] = 25; // 数据包包含的字节数
 		memcpy(&UpperCom_Send_Buffer[4], &bullet_velocity, sizeof(float));
 		memcpy(&UpperCom_Send_Buffer[8], &gimbal_pitch, sizeof(uint16_t));				//pitch当前角度
 		memcpy(&UpperCom_Send_Buffer[10], &gimbal_yaw, sizeof(uint16_t));				//小YAW当前角度(相对大YAW)
@@ -62,6 +62,10 @@ void UpperCom_Send_To_Up(uint8_t COM)
 		memcpy(&UpperCom_Send_Buffer[17], &chassis_mode, sizeof(uint8_t));				//底盘模式
 		memcpy(&UpperCom_Send_Buffer[18], &lack_blood_son_mode, sizeof(uint8_t));		//缺血回城子模式
 		memcpy(&UpperCom_Send_Buffer[19], &ControlMes.bigYaw_realAngle, sizeof(int16_t));		    //大YAW当前角度(世界坐标系下)，单位rad
+		memcpy(&UpperCom_Send_Buffer[21], &die_info[0], sizeof(uint8_t));
+		memcpy(&UpperCom_Send_Buffer[22], &die_info[1], sizeof(uint8_t));
+		memcpy(&UpperCom_Send_Buffer[23], &blood_recover_info[0], sizeof(uint8_t));
+		memcpy(&UpperCom_Send_Buffer[24], &blood_recover_info[1], sizeof(uint8_t));
 
 		Append_CRC8_Check_Sum(UpperCom_Send_Buffer, 5 + UpperCom_Send_Buffer[3]); // 5+x，x代表数据包包含的数据字节数。
 	}

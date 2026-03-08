@@ -24,6 +24,7 @@
 #define CAN_ID_CHASSIS 0x10f // 假设FDCAN报文底盘数据ID为0x10f
 #define CAN_ID_GIMBAL 0x11f	 // 云台数据ID为0x11f
 #define CAN_ID_6006_BIG_YAW 0x12f //大YAW数据ID为0x12f
+#define CAN_ID_JUDGESYSTEM 0x13f // 裁判系统数据ID为0x13f
 // #define FDCAN_ID_IT_KEYCOMMAND  0x22f // 图传键鼠数据ID为0x22f
 
 #define model_Normal 0
@@ -36,6 +37,7 @@
 	{                          \
 		&Board1_To_2,          \
 		&Board1_getGimbalInfo, \
+		&Board1_getJudgeSystemInfo, \
 	}
 
 // 定义FDCAN报文的结构体
@@ -95,10 +97,12 @@ typedef struct
 {
 	void (*Board1_To_2)(void);
 	void (*Board1_getGimbalInfo)(Can_Export_Data_t RxMessage);
+	void (*Board1_getJudgeSystemInfo)(Can_Export_Data_t RxMessage);
 } Board1_FUN_t;
 
 extern Board1_FUN_t Board1_FUN;
 extern ControlMessge ControlMes;
-// extern ext_robot_keycommand_t ext_robot_keycommand;
+extern uint8_t die_info[2];
+extern uint8_t blood_recover_info[2];
 
 #endif
