@@ -18,6 +18,9 @@ uint8_t TDF_RX_Finish = 0;
 uint8_t SBUS_RXBuffer[SBUS_RX_LEN] = {0}; // 接收缓冲
 TDF_Export_Data_t TDF_Export_Data = TDF_ExportDataGroundInit;
 
+#define EXTENDED_SBUS_RX_LEN 256
+uint8_t Extended_SBUS_RXBuffer[EXTENDED_SBUS_RX_LEN];
+
 /* ----------------------- Internal Function ----------------------------------- */
 void RemoteControl_PC_Update(void);
 
@@ -28,7 +31,8 @@ void RemoteControl_PC_Update(void);
  */
 void TDF_Init()
 {
-    HAL_UARTEx_ReceiveToIdle_DMA(&huart3, SBUS_RXBuffer, sizeof(SBUS_RXBuffer));
+    memset(Extended_SBUS_RXBuffer, 0xFF, EXTENDED_SBUS_RX_LEN);
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart3, Extended_SBUS_RXBuffer, EXTENDED_SBUS_RX_LEN);
 }
 
 /**
@@ -94,103 +98,110 @@ static uint8_t map_to_2levels(int16_t sbus_val)
  * @retval void
  */
 void TDF_Handle()
-{
-    if (TDF_RX_Finish == 1)
-    {
+{    
+    // if (TDF_RX_Finish == 1)
+    // {
         TDF_RX_Finish = 0;
-
-        // 帧头帧尾校验
-        if (SBUS_RXBuffer[0] == 0x0F && SBUS_RXBuffer[24] == 0x00)//??????????????????????????
+        for (uint16_t buffer_offset = 0; buffer_offset < EXTENDED_SBUS_RX_LEN - SBUS_RX_LEN; buffer_offset++)
         {
-            // 1. 解析原始通道数据（保持原解析逻辑）
-            SBUS.Ch1 = ((uint16_t)SBUS_RXBuffer[1]) | ((uint16_t)((SBUS_RXBuffer[2] & 0x07) << 8));
-            SBUS.Ch2 = ((uint16_t)((SBUS_RXBuffer[2] & 0xf8) >> 3)) | (((uint16_t)(SBUS_RXBuffer[3] & 0x3f)) << 5);
-            SBUS.Ch3 = ((uint16_t)((SBUS_RXBuffer[3] & 0xc0) >> 6)) | ((((uint16_t)SBUS_RXBuffer[4]) << 2)) | (((uint16_t)(SBUS_RXBuffer[5] & 0x01)) << 10);
-            SBUS.Ch4 = ((uint16_t)((SBUS_RXBuffer[5] & 0xfe) >> 1)) | (((uint16_t)(SBUS_RXBuffer[6] & 0x0f)) << 7);
-            SBUS.Ch5 = ((uint16_t)((SBUS_RXBuffer[6] & 0xf0) >> 4)) | (((uint16_t)(SBUS_RXBuffer[7] & 0x7f)) << 4);
-            SBUS.Ch6 = ((uint16_t)((SBUS_RXBuffer[7] & 0x80) >> 7)) | (((uint16_t)SBUS_RXBuffer[8]) << 1) | (((uint16_t)(SBUS_RXBuffer[9] & 0x03)) << 9);
-            SBUS.Ch7 = ((uint16_t)((SBUS_RXBuffer[9] & 0xfc) >> 2)) | (((uint16_t)(SBUS_RXBuffer[10] & 0x1f)) << 6);
-            SBUS.Ch8 = ((uint16_t)((SBUS_RXBuffer[10] & 0xe0) >> 5)) | (((uint16_t)(SBUS_RXBuffer[11])) << 3);
-            SBUS.Ch9 = ((uint16_t)SBUS_RXBuffer[12]) | (((uint16_t)(SBUS_RXBuffer[13] & 0x07)) << 8);
-            SBUS.Ch10 = ((uint16_t)((SBUS_RXBuffer[13] & 0xf8) >> 3)) | (((uint16_t)(SBUS_RXBuffer[14] & 0x3f)) << 5);
-            SBUS.Ch11 = ((uint16_t)((SBUS_RXBuffer[14] & 0xc0) >> 6)) | (((uint16_t)SBUS_RXBuffer[15]) << 2) | (((uint16_t)(SBUS_RXBuffer[16] & 0x01)) << 10);
-            SBUS.Ch12 = ((uint16_t)((SBUS_RXBuffer[16] & 0xfe) >> 1)) | (((uint16_t)(SBUS_RXBuffer[17] & 0x0f)) << 7);
-            SBUS.Ch13 = ((uint16_t)((SBUS_RXBuffer[17] & 0xf0) >> 4)) | (((uint16_t)(SBUS_RXBuffer[18] & 0x7f)) << 4);
-            SBUS.Ch14 = ((uint16_t)((SBUS_RXBuffer[18] & 0x80) >> 7)) | (((uint16_t)SBUS_RXBuffer[19]) << 1) | (((uint16_t)(SBUS_RXBuffer[20] & 0x03)) << 9);
-            SBUS.Ch15 = ((uint16_t)((SBUS_RXBuffer[20] & 0xfc) >> 2)) | (((uint16_t)(SBUS_RXBuffer[21] & 0x1f)) << 6);
-            SBUS.Ch16 = ((uint16_t)((SBUS_RXBuffer[21] & 0xe0) >> 5)) | (((uint16_t)SBUS_RXBuffer[22]) << 3);
+            uint8_t* check_SBUS_RXBuffer = Extended_SBUS_RXBuffer + buffer_offset;
+        
+            // 帧头帧尾校验
+            if (check_SBUS_RXBuffer[0] == 0x0F && check_SBUS_RXBuffer[24] == 0x00)
+            {
+                memcpy(SBUS_RXBuffer, check_SBUS_RXBuffer, SBUS_RX_LEN);
 
-            // 2. 通道数据映射
-			RC_Ctrl_TDFData.rc.Ch1 = map_to_1024(SBUS.Ch1);
-            RC_Ctrl_TDFData.rc.Ch2 = map_to_1024(SBUS.Ch2);
-            if(RC_Ctrl_TDFData.rc.Ch2 < 50 && RC_Ctrl_TDFData.rc.Ch2 > -50) RC_Ctrl_TDFData.rc.Ch2 = 0;
-            RC_Ctrl_TDFData.rc.Ch3 = map_to_1024(SBUS.Ch3);
-            RC_Ctrl_TDFData.rc.Ch4 = map_to_1024(SBUS.Ch4);
-            RC_Ctrl_TDFData.rc.Ch5 = map_to_3levels(SBUS.Ch5);
-            RC_Ctrl_TDFData.rc.Ch6 = map_to_3levels(SBUS.Ch6);
-            RC_Ctrl_TDFData.rc.Ch7 = map_to_3levels(SBUS.Ch7);
-            RC_Ctrl_TDFData.rc.Ch8 = map_to_3levels(SBUS.Ch8);
-            RC_Ctrl_TDFData.rc.Ch9 = map_to_3levels(SBUS.Ch9);
-            RC_Ctrl_TDFData.rc.Ch10 = map_to_2levels(SBUS.Ch10);
-            RC_Ctrl_TDFData.rc.Ch11 = map_to_3levels(SBUS.Ch11);
-            RC_Ctrl_TDFData.rc.Ch12 = map_to_2levels(SBUS.Ch12);
-            RC_Ctrl_TDFData.rc.Ch13 = map_to_1024(SBUS.Ch13);
-            RC_Ctrl_TDFData.rc.Ch14 = map_to_1024(SBUS.Ch14);
-            RC_Ctrl_TDFData.rc.Ch15 = map_to_1024(SBUS.Ch15);
-            RC_Ctrl_TDFData.rc.Ch16 = map_to_1024(SBUS.Ch16);
+                // 1. 解析原始通道数据（保持原解析逻辑）
+                SBUS.Ch1 = ((uint16_t)SBUS_RXBuffer[1]) | ((uint16_t)((SBUS_RXBuffer[2] & 0x07) << 8));
+                SBUS.Ch2 = ((uint16_t)((SBUS_RXBuffer[2] & 0xf8) >> 3)) | (((uint16_t)(SBUS_RXBuffer[3] & 0x3f)) << 5);
+                SBUS.Ch3 = ((uint16_t)((SBUS_RXBuffer[3] & 0xc0) >> 6)) | ((((uint16_t)SBUS_RXBuffer[4]) << 2)) | (((uint16_t)(SBUS_RXBuffer[5] & 0x01)) << 10);
+                SBUS.Ch4 = ((uint16_t)((SBUS_RXBuffer[5] & 0xfe) >> 1)) | (((uint16_t)(SBUS_RXBuffer[6] & 0x0f)) << 7);
+                SBUS.Ch5 = ((uint16_t)((SBUS_RXBuffer[6] & 0xf0) >> 4)) | (((uint16_t)(SBUS_RXBuffer[7] & 0x7f)) << 4);
+                SBUS.Ch6 = ((uint16_t)((SBUS_RXBuffer[7] & 0x80) >> 7)) | (((uint16_t)SBUS_RXBuffer[8]) << 1) | (((uint16_t)(SBUS_RXBuffer[9] & 0x03)) << 9);
+                SBUS.Ch7 = ((uint16_t)((SBUS_RXBuffer[9] & 0xfc) >> 2)) | (((uint16_t)(SBUS_RXBuffer[10] & 0x1f)) << 6);
+                SBUS.Ch8 = ((uint16_t)((SBUS_RXBuffer[10] & 0xe0) >> 5)) | (((uint16_t)(SBUS_RXBuffer[11])) << 3);
+                SBUS.Ch9 = ((uint16_t)SBUS_RXBuffer[12]) | (((uint16_t)(SBUS_RXBuffer[13] & 0x07)) << 8);
+                SBUS.Ch10 = ((uint16_t)((SBUS_RXBuffer[13] & 0xf8) >> 3)) | (((uint16_t)(SBUS_RXBuffer[14] & 0x3f)) << 5);
+                SBUS.Ch11 = ((uint16_t)((SBUS_RXBuffer[14] & 0xc0) >> 6)) | (((uint16_t)SBUS_RXBuffer[15]) << 2) | (((uint16_t)(SBUS_RXBuffer[16] & 0x01)) << 10);
+                SBUS.Ch12 = ((uint16_t)((SBUS_RXBuffer[16] & 0xfe) >> 1)) | (((uint16_t)(SBUS_RXBuffer[17] & 0x0f)) << 7);
+                SBUS.Ch13 = ((uint16_t)((SBUS_RXBuffer[17] & 0xf0) >> 4)) | (((uint16_t)(SBUS_RXBuffer[18] & 0x7f)) << 4);
+                SBUS.Ch14 = ((uint16_t)((SBUS_RXBuffer[18] & 0x80) >> 7)) | (((uint16_t)SBUS_RXBuffer[19]) << 1) | (((uint16_t)(SBUS_RXBuffer[20] & 0x03)) << 9);
+                SBUS.Ch15 = ((uint16_t)((SBUS_RXBuffer[20] & 0xfc) >> 2)) | (((uint16_t)(SBUS_RXBuffer[21] & 0x1f)) << 6);
+                SBUS.Ch16 = ((uint16_t)((SBUS_RXBuffer[21] & 0xe0) >> 5)) | (((uint16_t)SBUS_RXBuffer[22]) << 3);
 
-            /**************************** control code ****************************/
-            ControlMes.shoot_state = RC_Ctrl_TDFData.rc.Ch7;  
-            /*发射信息处理*/        //(UP:单发，MID：禁发，DOWN:连发)
-            if (ControlMes.shoot_state == RC_UP)
-            {
-                Dial_Data.Shoot_Mode = Single_Shoot;
-                Shoot_Data.Shoot_Switch = 1;
-            }
-            else if (ControlMes.shoot_state == RC_MID)
-            {
-                Dial_Data.Shoot_Mode = Single_Shoot;    //虽然是禁发，不过Shoot_Mode变量在Shoot_Switch=0时作用不大，在此设为Single_Shoot即可
-                Shoot_Data.Shoot_Switch = 0;
-            }
-            else if (ControlMes.shoot_state == RC_DOWN)
-            {
-                Dial_Data.Shoot_Mode = Continuous_Shoot;//////////////这里应该设置检录模式吗？？？
-                Shoot_Data.Shoot_Switch = 1;
-            }
-            /*通道5*/
-            
+                // 2. 通道数据映射
+                RC_Ctrl_TDFData.rc.Ch1 = map_to_1024(SBUS.Ch1);
+                RC_Ctrl_TDFData.rc.Ch2 = map_to_1024(SBUS.Ch2);
+                if(RC_Ctrl_TDFData.rc.Ch2 < 50 && RC_Ctrl_TDFData.rc.Ch2 > -50) RC_Ctrl_TDFData.rc.Ch2 = 0;
+                RC_Ctrl_TDFData.rc.Ch3 = map_to_1024(SBUS.Ch3);
+                RC_Ctrl_TDFData.rc.Ch4 = map_to_1024(SBUS.Ch4);
+                RC_Ctrl_TDFData.rc.Ch5 = map_to_3levels(SBUS.Ch5);
+                RC_Ctrl_TDFData.rc.Ch6 = map_to_3levels(SBUS.Ch6);
+                RC_Ctrl_TDFData.rc.Ch7 = map_to_3levels(SBUS.Ch7);
+                RC_Ctrl_TDFData.rc.Ch8 = map_to_3levels(SBUS.Ch8);
+                RC_Ctrl_TDFData.rc.Ch9 = map_to_3levels(SBUS.Ch9);
+                RC_Ctrl_TDFData.rc.Ch10 = map_to_2levels(SBUS.Ch10);
+                RC_Ctrl_TDFData.rc.Ch11 = map_to_3levels(SBUS.Ch11);
+                RC_Ctrl_TDFData.rc.Ch12 = map_to_2levels(SBUS.Ch12);
+                RC_Ctrl_TDFData.rc.Ch13 = map_to_1024(SBUS.Ch13);
+                RC_Ctrl_TDFData.rc.Ch14 = map_to_1024(SBUS.Ch14);
+                RC_Ctrl_TDFData.rc.Ch15 = map_to_1024(SBUS.Ch15);
+                RC_Ctrl_TDFData.rc.Ch16 = map_to_1024(SBUS.Ch16);
 
-            /*中正常遥控；下自瞄；上键鼠*/
-            if (RC_Ctrl_TDFData.rc.Ch5 == RC_MID)
-            {
-                Remote_Control();
-            }
+                /**************************** control code ****************************/
+                ControlMes.shoot_state = RC_Ctrl_TDFData.rc.Ch7;  
+                /*发射信息处理*/        //(UP:单发，MID：禁发，DOWN:连发)
+                if (ControlMes.shoot_state == RC_UP)
+                {
+                    Dial_Data.Shoot_Mode = Single_Shoot;
+                    Shoot_Data.Shoot_Switch = 1;
+                }
+                else if (ControlMes.shoot_state == RC_MID)
+                {
+                    Dial_Data.Shoot_Mode = Single_Shoot;    //虽然是禁发，不过Shoot_Mode变量在Shoot_Switch=0时作用不大，在此设为Single_Shoot即可
+                    Shoot_Data.Shoot_Switch = 0;
+                }
+                else if (ControlMes.shoot_state == RC_DOWN)
+                {
+                    Dial_Data.Shoot_Mode = Continuous_Shoot;//////////////这里应该设置检录模式吗？？？
+                    Shoot_Data.Shoot_Switch = 1;
+                }
+                /*通道5*/
+                
 
-            // 部分自瞄模式(底盘，摩擦轮仍手控)
-            else if (RC_Ctrl_TDFData.rc.Ch5 == RC_DOWN)
-            {
-                Patial_AutoAim();
-            }
+                /*中正常遥控；下自瞄；上键鼠*/
+                if (RC_Ctrl_TDFData.rc.Ch5 == RC_MID)
+                {
+                    Remote_Control();
+                }
 
-            //完全自瞄模式(仅底盘手控)
-            else if (RC_Ctrl_TDFData.rc.Ch5 == RC_UP)
-            {
-                Total_AutoAim();
-            }
+                // 部分自瞄模式(底盘，摩擦轮仍手控)
+                else if (RC_Ctrl_TDFData.rc.Ch5 == RC_DOWN)
+                {
+                    Patial_AutoAim();
+                }
 
-            else
-            {
-                ControlMes.AutoAimFlag = 0;
-                ControlMes.x_velocity = 0;          // 左手上下
-                ControlMes.y_velocity = 0;          // 左手左右
-                ControlMes.z_rotation_velocity = 0; // 右手上下
-                ControlMes.yaw_velocity = 0;
-                ControlMes.pitch_velocity = 0;
-                ControlMes.shoot_state = RC_MID;
+                //完全自瞄模式(仅底盘手控)
+                else if (RC_Ctrl_TDFData.rc.Ch5 == RC_UP)
+                {
+                    Total_AutoAim();
+                }
+
+                else
+                {
+                    ControlMes.AutoAimFlag = 0;
+                    ControlMes.x_velocity = 0;          // 左手上下
+                    ControlMes.y_velocity = 0;          // 左手左右
+                    ControlMes.z_rotation_velocity = 0; // 右手上下
+                    ControlMes.yaw_velocity = 0;
+                    ControlMes.pitch_velocity = 0;
+                    ControlMes.shoot_state = RC_MID;
+                }
             }
         }
-    }
-		HAL_UARTEx_ReceiveToIdle_DMA(&huart3, SBUS_RXBuffer, sizeof(SBUS_RXBuffer));
+    // }
+    memset(Extended_SBUS_RXBuffer, 0xFF, EXTENDED_SBUS_RX_LEN);
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart3, Extended_SBUS_RXBuffer, EXTENDED_SBUS_RX_LEN);
     // 用board1 CAN2发送给board2。
     Board1_FUN.Board1_To_2();
 }
