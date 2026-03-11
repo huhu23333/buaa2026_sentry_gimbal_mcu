@@ -23,7 +23,7 @@ extern M6020s_t *M6020_Array[1];
 /****************Pithch限位*****************/
 const float Delta_Pitch_Min = -11;
 const float Delta_Pitch_Max = 11;
-const float Cloud_Pitch_Min = -14;
+const float Cloud_Pitch_Min = -19;
 const float Cloud_Pitch_Max = 2;
 const float Cloud_Pitch_Center = -6;	//上电时的初始位置
 /****************Pitch限位End*****************/
