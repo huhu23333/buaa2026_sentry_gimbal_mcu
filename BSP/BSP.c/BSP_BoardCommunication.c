@@ -82,6 +82,7 @@ void Board1_getJudgeSystemInfo(Can_Export_Data_t RxMessage)
   die_info[1] = (uint8_t)(RxMessage.CANx_Export_RxMessage[1]);
   blood_recover_info[0] = (uint8_t)(RxMessage.CANx_Export_RxMessage[2]);
   blood_recover_info[1] = (uint8_t)(RxMessage.CANx_Export_RxMessage[3]);
-  
+  ControlMes.Judge_HeatInfo = (uint16_t)(RxMessage.CANx_Export_RxMessage[4] << 8 | RxMessage.CANx_Export_RxMessage[5]);
+
 }
 

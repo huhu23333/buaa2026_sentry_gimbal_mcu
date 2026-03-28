@@ -91,7 +91,7 @@ void Dial_Processing_2(void)
   {
     Normal_Dial();              //正常拨弹执行，冷却时间计时，正常拨弹角度计数
     Bullet_Stuck_Processing();  //卡弹检测，冷却时间计时，卡弹反转执行
-    // Overheat_Detect();          //过热检测
+    Overheat_Detect();          //过热检测
   }
   else //拨杆拨到其他挡位时，执行状态刷新
   {
@@ -131,7 +131,7 @@ void Normal_Dial(void)
   /***********************执行拨弹**************************************** */
   if (!Heat_Data.overheat && !is_reversing && (ControlMes.manual_fire || (Auto_Aim_Control_Msg.fire_flag && ControlMes.AutoAimFlag)))//没有过热,没有反转,自瞄未开启或自瞄开启时上位机传入开火信号时正常拨弹
   {
-    M2006_Array[Dial_Motor].targetSpeed = -5000; // Dial_Data.Speed_Dial;
+    M2006_Array[Dial_Motor].targetSpeed = -3500; // Dial_Data.Speed_Dial;
     M2006_Array[Dial_Motor].outCurrent = PID_Model4_Update(&M2006_DialI_Pid, &fuzzy_pid_bullet_v, M2006_Array[Dial_Motor].targetSpeed, M2006_Array[Dial_Motor].realSpeed);
 
     // 仅在正常拨弹（非反转）时更新累计角度
@@ -208,7 +208,11 @@ void Overheat_Detect(void)
     //需要写热量累计以及热量冷却两方面的程序。
     //热量累计完全取决非反转时的角度变化。
     //热量冷却值完全取决于时间的变化，要进行大于零的限幅。
-    Heat_Data.current_heat = (Heat_Data.total_normal_angle*10.0f/Angle_DialOneBullet_17mm) - (Heat_Data.cooling_ticks*Heat_Data.cooling_rate/configTICK_RATE_HZ);
+
+    // Heat_Data.current_heat = (Heat_Data.total_normal_angle*10.0f/Angle_DialOneBullet_17mm) - (Heat_Data.cooling_ticks*Heat_Data.cooling_rate/configTICK_RATE_HZ);
+
+    //新版本下，热量直接由裁判系统上传
+    Heat_Data.current_heat = ControlMes.Judge_HeatInfo;
     if (Heat_Data.current_heat >= Heat_Data.max_heat) Heat_Data.overheat = 1;
 }
 

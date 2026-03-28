@@ -48,8 +48,8 @@ typedef enum
 /* 拨出一个弹丸，电机需要转动的角度，映射为360°-8192 */
 #define Angle_DialOneBullet_17mm 36864.0f // 1024*36  //8192*36/8
 
-#define Burst_First_Level1_Max_Heat 200
-#define Burst_First_Level1_Cooling_Rate 10
+#define Burst_First_Level1_Max_Heat 240
+#define Burst_First_Level1_Cooling_Rate 30
 #define Cooling_First_Level1_Max_Heat 50
 #define Cooling_First_Level1_Cooling_Rate 40
 

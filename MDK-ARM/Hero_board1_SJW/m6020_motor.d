@@ -9,7 +9,7 @@
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/CMSIS/Include/core_cm4.h
-.\hero_board1_sjw\m6020_motor.o: G:\Software2\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stdint.h
+.\hero_board1_sjw\m6020_motor.o: E:\ProgramFile\MDK\core\ARM\ARMCC\Bin\..\include\stdint.h
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/CMSIS/Include/cmsis_version.h
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -17,7 +17,7 @@
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-.\hero_board1_sjw\m6020_motor.o: G:\Software2\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stddef.h
+.\hero_board1_sjw\m6020_motor.o: E:\ProgramFile\MDK\core\ARM\ARMCC\Bin\..\include\stddef.h
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
@@ -38,13 +38,13 @@
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
 .\hero_board1_sjw\m6020_motor.o: ../BSP/BSP.h/typedef.h
-.\hero_board1_sjw\m6020_motor.o: G:\Software2\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stdbool.h
-.\hero_board1_sjw\m6020_motor.o: G:\Software2\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stdio.h
+.\hero_board1_sjw\m6020_motor.o: E:\ProgramFile\MDK\core\ARM\ARMCC\Bin\..\include\stdbool.h
+.\hero_board1_sjw\m6020_motor.o: E:\ProgramFile\MDK\core\ARM\ARMCC\Bin\..\include\stdio.h
 .\hero_board1_sjw\m6020_motor.o: ../Alg/Alg.h/pid.h
-.\hero_board1_sjw\m6020_motor.o: G:\Software2\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\string.h
-.\hero_board1_sjw\m6020_motor.o: G:\Software2\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stdlib.h
+.\hero_board1_sjw\m6020_motor.o: E:\ProgramFile\MDK\core\ARM\ARMCC\Bin\..\include\string.h
+.\hero_board1_sjw\m6020_motor.o: E:\ProgramFile\MDK\core\ARM\ARMCC\Bin\..\include\stdlib.h
 .\hero_board1_sjw\m6020_motor.o: ../Alg/Alg.h/kalman_filter.h
 .\hero_board1_sjw\m6020_motor.o: ../Alg/Alg.h/arm_math.h
 .\hero_board1_sjw\m6020_motor.o: ../Drivers/CMSIS/Include/core_cm4.h
-.\hero_board1_sjw\m6020_motor.o: G:\Software2\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\math.h
+.\hero_board1_sjw\m6020_motor.o: E:\ProgramFile\MDK\core\ARM\ARMCC\Bin\..\include\math.h
 .\hero_board1_sjw\m6020_motor.o: ../Alg/Alg.h/FuzzyPID.h

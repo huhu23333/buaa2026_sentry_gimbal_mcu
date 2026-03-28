@@ -71,6 +71,7 @@ typedef struct
 	uint8_t yaw_choose;     //调试用，大小yaw控制选择
 
 	uint8_t manual_fire;
+	uint16_t Judge_HeatInfo;
 } ControlMessge;
 
 /* 图传遥控客户端下发键鼠遥控信息:0x0304  Byte 12*/
